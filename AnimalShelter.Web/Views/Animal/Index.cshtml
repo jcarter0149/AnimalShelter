@@ -1,0 +1,54 @@
+﻿<div class="animal-page-container-action-bar-bottom">
+    <div class="animal-page-container animal-page-panel vertically-scrollable">
+        <div class="alert page-title d-flex flex-row">
+            <h1 class="h3">
+                <span>Animals</span>
+                <span class="badge badge-primary small animal-navbar-button-theme ml-n1 align-top animalCount"></span>
+            </h1>
+        </div>
+
+
+        
+    </div>
+
+    <div class="action-bar-bottom p-3">
+        <div style="display: flex; justify-content: space-between">
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="btn btn-sm btn-secondary"
+               title="Back to list.">
+                <span class="fa fa-undo"></span>
+                <span class="ml-1">Go Home</span>
+            </a>
+            
+            <a asp-controller="Animal"
+               asp-action="Add"
+               class="btn btn-sm btn-primary"
+               title="Back to list.">
+                <span class="fa fa-plus"></span>
+                <span class="ml-1">Add Animal</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        
+        function GetAllAnimals(){
+            $.ajax({
+                type: 'Get',
+                url: 'AnimalAjax/GetAll',
+                dataType: "Text",
+                success: function(data){
+                    var dataParsed = JSON.parse(data)
+                    $(".animalCount").text(dataParsed.model.length)
+                }
+            })
+        }
+
+        $(() => {
+            GetAllAnimals();
+        })
+    </script>
+}
