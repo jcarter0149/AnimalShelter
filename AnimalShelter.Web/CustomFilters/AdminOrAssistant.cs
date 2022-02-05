@@ -1,4 +1,5 @@
-﻿using AnimalShelter.Web.ApplicationServices;
+﻿using AnimalShelter.Domain;
+using AnimalShelter.Web.ApplicationServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +12,9 @@ namespace AnimalShelter.Web.CustomFilters
     {
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            if (string.IsNullOrEmpty(context.HttpContext.User.Identity.Name))
+            var userNameResult = NotNullOrEmptyString.Create(context.HttpContext.User.Identity.Name);
+
+            if (userNameResult.IsFailure)
             {
                 context.Result = new RedirectToActionResult("Index", "NotAuthenticatedUser", null);
                 return;
@@ -31,7 +34,14 @@ namespace AnimalShelter.Web.CustomFilters
         {
             var _roleApplicationService = context.HttpContext.RequestServices.GetRequiredService<RoleApplicationService>();
 
-            var roleResult = _roleApplicationService.IsUserAnAdminOrAssistant(context.HttpContext.User.Identity.Name);
+            var userNameResult = NotNullOrEmptyString.Create(context.HttpContext.User.Identity.Name);
+
+            if (userNameResult.IsFailure)
+            {
+                return false;
+            }
+
+            var roleResult = _roleApplicationService.IsUserAnAdminOrAssistant(userNameResult.Value);
 
             if (roleResult.IsFailure)
             {

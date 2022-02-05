@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AnimalShelter.Data\AnimalShelter.Data.csproj" />
+    <ProjectReference Include="..\AnimalShelter.Domain\AnimalShelter.Domain.csproj" />
   </ItemGroup>
 
 </Project>

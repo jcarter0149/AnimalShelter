@@ -1,4 +1,5 @@
-﻿using AnimalShelter.Web.Models.Responses;
+﻿using AnimalShelter.Domain;
+using AnimalShelter.Web.Models.Responses;
 using CSharpFunctionalExtensions;
 using Dapper;
 using Microsoft.Data.SqlClient;
@@ -44,7 +45,7 @@ namespace AnimalShelter.Web.ApplicationServices
             return Result.Success(userRoleLookupResponse != null);
         }
 
-        public Result<bool> IsUserAnAdminOrAssistant(string username)
+        public Result<bool> IsUserAnAdminOrAssistant(NotNullOrEmptyString username)
         {
 
             const string sql = @"SELECT Username
@@ -54,7 +55,7 @@ namespace AnimalShelter.Web.ApplicationServices
 
             var parameters = new
             {
-                Username = username,
+                Username = username.Value,
                 AdminRoleId = (int)Enums.Role.Admin,
                 AssistantRoleId = (int)Enums.Role.Assistant
             };
